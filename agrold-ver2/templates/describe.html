@@ -1,0 +1,33 @@
+<!-- movies.html -->
+
+{% extends "layout.html" %}
+{% block content %}
+<form action="/test/sparql" method="get">
+  <label for="entity_uri">Search for</label>
+  <input type="text" id="entity_uri" name="entity_uri" value=""> <input type="submit" value="Submit">
+</form><br>
+{% if entity_uri %}
+Results found with entity_uri: <b>{{entity_uri}} </b>
+  <table border="1" style="background-color: white; text-align: center; width: 900px">
+  <thead>
+  <tr>
+  {% for var in results["head"]["vars"] %}
+  <th>{{var}}</th>
+  {% endfor %}
+  </tr>
+  </thead>
+  <tbody>
+  {% for result in results["results"]["bindings"] %}
+  <tr>
+    {% for var in results["head"]["vars"] %}
+  <td>{{result[var]["value"] if var in result else ""}}</td>
+  {% endfor %}
+  </tr>
+  {% endfor %}
+  <tbody>
+  </table>
+{% else %}
+Please submit an entity URI
+{% endif %}
+{% endblock %}
+{% block script %}style="position: inherit;"{% endblock %}

@@ -1,0 +1,377 @@
+{% extends "layout.html" %}
+{% block content %}
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html version="-//W3C//DTD XHTML 1.1//EN"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xml:lang="en"
+>
+
+
+<style type="text/css">
+/*<![CDATA[*/
+html { padding: 0; }
+body {
+padding: 0;
+margin: 0;
+font-family:Arial, Helvetica, sans-serif;
+font-size: 9pt;
+color: #333;
+background-color: #FDFDFD;
+}
+#header {
+padding: 0;
+margin: 0;
+background-color: #86B9D9;
+color: #FFFFFF;
+border-bottom: 1px solid #AAA;
+}
+#header h1 {
+font-size: 16pt;
+font-weight: normal;
+text-align: left;
+vertical-align: middle;
+padding: 4px 8px 4px 8px;
+margin: 0px 0px 0px 0px;
+}
+#menu {
+margin-left: 8px;
+margin-right: 8px;
+margin-top: 0px;
+clear: right;
+float: right;
+}
+#intro,#main {
+margin-left: 8px;
+margin-right: 8px;
+}
+#help {
+margin-left: 8px;
+margin-right: 8px;
+width: 80%
+}
+#footer {
+width: 100%;
+float: left;
+clear: left;
+margin: 2em 0 0;
+padding-top: 0.7ex;
+border-top: 1px solid #AAA;
+font-size: 8pt;
+text-align: center;
+}
+fieldset {
+border: 0;
+padding: 0;
+margin: 0;
+}
+fieldset label {
+font-weight: normal;
+white-space: nowrap;
+font-size: 11pt;
+color: #000;
+}
+fieldset label.n {
+display: block;
+vertical-align: bottom;
+margin-top:5px;
+width: 160px;
+float:left;
+white-space: nowrap;
+}
+fieldset label.n:after { content: ":"; }
+fieldset label.n1 {
+display: block;
+vertical-align: bottom;
+margin-top:5px;
+width: 160px;
+float:left;
+white-space: nowrap;
+}
+fieldset label.ckb {
+width: 160px;
+font-weight: normal;
+font-size: 10pt;
+}
+fieldset label.ckb:after { content: ""; }
+fieldset textarea {
+width: 99%;
+font-family: monospace;
+font-size: 10pt;
+}
+#cxml {
+clear: both;
+display: block;
+}
+#savefs {
+clear: both;
+display: block;
+}
+span.info {
+font-size: 9pt;
+white-space: nowrap;
+height: 2em;
+}
+br { clear: both; }
+/*]]>*/
+</style>
+
+    <script type="text/javascript">
+    /*<![CDATA[*/
+    var timer;
+    function format_select(query_obg){
+        clearTimeout(timer);
+        timer = setTimeout (function delay_format_select() {do_format_select(query_obg);}, 1000);
+    }
+
+    var curr_format = 0;
+    function do_format_select(query_obg)
+    {
+        var query = query_obg.value;
+        var format = query_obg.form.format;
+        var prev_value = format.options[format.selectedIndex].value;
+        var prev_format = curr_format;
+        var ctr = 0;
+        var query_is_construct = (query.match(/\bconstruct\b\s/i) || query.match(/\bdescribe\b\s/i));
+
+        if (query_is_construct && curr_format != 2) {
+            for(ctr = format.options.length - 1; ctr >= 0; ctr--)
+                format.remove(ctr);
+            ctr = 0;
+            format.options[ctr++] = new Option('Turtle','text/turtle');
+            format.options[ctr++] = new Option('Turtle (beautified)','application/x-nice-turtle');
+            format.options[ctr++] = new Option('RDF/JSON','application/rdf+json');
+            format.options[ctr++] = new Option('RDF/XML','application/rdf+xml');
+            format.options[ctr++] = new Option('N-Triples','text/plain');
+            format.options[ctr++] = new Option('XHTML+RDFa','application/xhtml+xml');
+            format.options[ctr++] = new Option('ATOM+XML','application/atom+xml');
+            format.options[ctr++] = new Option('ODATA/JSON','application/odata+json');
+            format.options[ctr++] = new Option('JSON-LD (plain)','application/x-json+ld');
+            format.options[ctr++] = new Option('JSON-LD (with context)','application/x-json+ld+ctx');
+            format.options[ctr++] = new Option('HTML (list)','text/x-html+ul');
+            format.options[ctr++] = new Option('HTML (table)','text/x-html+tr');
+            format.options[ctr++] = new Option('HTML+Microdata (basic)','text/html');
+            format.options[ctr++] = new Option('HTML+Microdata (table)','application/x-nice-microdata');
+            format.options[ctr++] = new Option('HTML+JSON-LD (basic)','text/x-html-script-ld+json');
+            format.options[ctr++] = new Option('HTML+Turtle (basic)','text/x-html-script-turtle');
+            format.options[ctr++] = new Option('Turtle (beautified - browsing oriented)','text/x-html-nice-turtle');
+            format.options[ctr++] = new Option('Microdata/JSON','application/microdata+json');
+            format.options[ctr++] = new Option('CSV','text/csv');
+            format.options[ctr++] = new Option('TSV','text/tab-separated-values');
+            format.options[ctr++] = new Option('TriG','application/x-trig');
+            curr_format = 2;
+        }
+
+        if (!query_is_construct && curr_format != 1) {
+            for(ctr = format.options.length - 1; ctr >= 0; ctr--)
+                format.remove(ctr);
+            ctr = 0;
+            format.options[ctr++] = new Option('Auto','auto');
+            format.options[ctr++] = new Option('HTML','text/html');
+            format.options[ctr++] = new Option('HTML (Faceted Browsing Links)','text/x-html+tr');
+            format.options[ctr++] = new Option('Spreadsheet','application/vnd.ms-excel');
+            format.options[ctr++] = new Option('XML','application/sparql-results+xml');
+            format.options[ctr++] = new Option('JSON','application/sparql-results+json');
+            format.options[ctr++] = new Option('Javascript','application/javascript');
+            format.options[ctr++] = new Option('Turtle','text/turtle');
+            format.options[ctr++] = new Option('RDF/XML','application/rdf+xml');
+            format.options[ctr++] = new Option('N-Triples','text/plain');
+            format.options[ctr++] = new Option('CSV','text/csv');
+            format.options[ctr++] = new Option('TSV','text/tab-separated-values');
+            curr_format = 1;
+        }
+        if (prev_format != curr_format)
+            for(ctr = format.options.length - 1, format.selectedIndex=0; ctr >= 0; ctr--)
+                if (format.options[ctr].value == prev_value) format.selectedIndex = ctr;
+    }
+
+function format_change(e)
+{
+var format = e.value;
+var cxml = document.getElementById("cxml");
+if (!cxml) return;
+if ((format.match (/\bCXML\b/i)))
+{
+cxml.style.display="block";
+} else {
+cxml.style.display="none";
+}
+}
+function savedav_change(e)
+{
+var savefs = document.getElementById("savefs");
+if (!savefs) return;
+if (e.checked)
+{
+savefs.style.display = "block";
+}
+else
+{
+savefs.style.display = "none";
+}
+}
+function change_run_button(e)
+{
+var button = document.getElementById("run");
+var lbl;
+
+if (!button) return;
+
+if (e.checked)
+{
+lbl = " Explain ";
+}
+else
+{
+lbl = " Run Query ";
+}
+
+if (button)
+{
+if (button.childNodes[0])
+{
+button.childNodes[0].nodeValue=lbl;
+}
+else if (button.value)
+{
+button.value=lbl;
+}
+else //if (button.innerHTML)
+{
+button.innerHTML=lbl;
+}
+}
+}
+function sparql_endpoint_init()
+{
+var format = document.getElementById("format");
+if (format) format_change(format);
+var savefs = document.getElementById("savefs");
+if (savefs)
+{
+var save = document.getElementById("save");
+if (save)
+savedav_change(save);
+}
+var b = document.getElementById("explain");
+if (b) change_run_button(b);
+}
+    /*]]>*/
+    </script>
+</head>
+<body onload="sparql_endpoint_init()">
+
+
+    <div id="main">
+    <br />
+    <form action="" method="get">
+    <fieldset>
+        <label for="default-graph-uri">Default Data Set Name (Graph IRI)</label><br />
+        <input type="text" name="default-graph-uri" id="default-graph-uri" value="" size="80"/>
+        <br /><br />
+        <label for="query">Query Text</label><br />
+        <textarea rows="18" cols="80" name="query" id="query" onchange="javascript:format_select(this)" onkeyup="javascript:format_select(this)">
+            PREFIX uri:<http://www.southgreen.fr/agrold/resource/Zm00001d042213>
+            PREFIX agrold:<http://www.southgreen.fr/agrold/vocabulary/>
+            SELECT ?property  ?hasValue ?isValueOf
+            WHERE {
+              { uri: ?property ?hasValue }
+              UNION
+              { ?isValueOf ?property uri:}
+            }
+        </textarea>
+        <br /><br />
+        <span class="info"><i>(Security restrictions of this server do not allow you to retrieve remote RDF data, see <a href="/sparql?help=enable_sponge">details</a>.)</i></span>
+        <br />
+        <label for="format" class="n">Results Format</label>
+        <select name="format" id="format" onchange="javascript:format_change(this)">
+            <option value="auto" >Auto</option>
+            <option value="text/html" selected="selected">HTML</option>
+            <option value="text/x-html+tr" >HTML (Faceted Browsing Links)</option>
+            <option value="application/vnd.ms-excel" >Spreadsheet</option>
+            <option value="application/sparql-results+xml" >XML</option>
+            <option value="application/sparql-results+json" >JSON</option>
+            <option value="application/javascript" >Javascript</option>
+            <option value="text/turtle" >Turtle</option>
+            <option value="application/rdf+xml" >RDF/XML</option>
+            <option value="text/plain" >N-Triples</option>
+            <option value="text/csv" >CSV</option>
+            <option value="text/tab-separated-values" >TSV</option>
+        </select>
+        <br />
+        <label for="timeout" class="n">Execution timeout</label>
+        <input name="timeout" id="timeout" type="text" value="0" /> milliseconds
+        <span class="info"><i>(values less than 1000 are ignored)</i></span>        <br />
+        <label class="n" for="options">Options</label>
+        <fieldset id="options">
+        <input name="debug" id="debug" type="checkbox" checked="checked"/>
+        <label for="debug" class="ckb">Strict checking of void variables</label>
+        <br>
+        <input name="log_debug_info" id="log_debug_info" type="checkbox"/>
+        <label for="log_debug_info" class="ckb">Log debug info at the end of output (has no effect on some queries and output formats)</label>
+        <br>
+        <input name="explain" id="explain" onclick="javascript:change_run_button(this)" type="checkbox"/>
+        <label for="explain" class="ckb">Generate SPARQL compilation report (instead of executing the query)</label>
+        </fieldset>
+
+        <br />
+        <input type="submit" name="run" id="run" value="Go"/>
+        <input type="reset" value="Reset"/>
+    </fieldset>
+    </form>
+    </div>
+
+    <div xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns="http://www.w3.org/1999/xhtml"
+         xmlns:sd="http://www.w3.org/ns/sparql-service-description#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         style="display:none">
+       <div class="description" about="" typeof="sd:Service">
+          <div rel="sd:endpoint" resource="http://agrold.southgreen.fr/sparql"/>
+          <div rel="sd:feature"
+               resource="http://www.w3.org/ns/sparql-service-description#UnionDefaultGraph"/>
+          <div rel="sd:feature"
+               resource="http://www.w3.org/ns/sparql-service-description#DereferencesURIs"/>
+          <div rel="sd:resultFormat" resource="http://www.w3.org/ns/formats/RDF_XML"/>
+          <div rel="sd:resultFormat" resource="http://www.w3.org/ns/formats/Turtle"/>
+          <div rel="sd:resultFormat"
+               resource="http://www.w3.org/ns/formats/SPARQL_Results_CSV"/>
+          <div rel="sd:resultFormat" resource="http://www.w3.org/ns/formats/N-Triples"/>
+          <div rel="sd:resultFormat" resource="http://www.w3.org/ns/formats/N3"/>
+          <div rel="sd:resultFormat"
+               resource="http://www.w3.org/ns/formats/SPARQL_Results_JSON"/>
+          <div rel="sd:resultFormat" resource="http://www.w3.org/ns/formats/RDFa"/>
+          <div rel="sd:resultFormat"
+               resource="http://www.w3.org/ns/formats/SPARQL_Results_XML"/>
+          <div rel="sd:supportedLanguage"
+               resource="http://www.w3.org/ns/sparql-service-description#SPARQL10Query"/>
+          <div rel="sd:url" resource="http://agrold.southgreen.fr/sparql"/>
+       </div>
+    </div>
+    {% if query  %}
+  <table border="1" style="background-color: white; text-align: center; width: 900px">
+  <thead>
+  <tr>
+  {% for var in results["head"]["vars"] %}
+  <th>{{var}}</th>
+  {% endfor %}
+  </tr>
+  </thead>
+  <tbody>
+  {% for result in results["results"]["bindings"] %}
+  <tr>
+    {% for var in results["head"]["vars"] %}
+  <td>{{result[var]["value"] if var in result else ""}}</td>
+  {% endfor %}
+  </tr>
+  {% endfor %}
+  <tbody>
+  </table>
+{% else %}
+Please submit an entity URI
+{% endif %}
+</body>
+</html>
+{% endblock %}
+{% block script %}style="position: inherit;"{% endblock %}

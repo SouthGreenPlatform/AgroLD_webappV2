@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div id="result_div">
+    <div class="container">
+        <div class="row">
+            <div class="col md-12">
+                <div class="jumbotron p-3">
+                    <!--create table for user managerment and "id" btn for sort table-->
+                    <table id="user_manager" class="table table-hover table-dark">
+                        <tr>
+                            <th onclick="w3.sortHTML('#user/manager', '.item', 'td:nth-child(1)')" style="cursor:pointer">ID
+                            </th>
+                            <th onclick="w3.sortHTML('#user/manager', '.item', 'td:nth-child(2)')" style="cursor:pointer">
+                                URI</th>
+                            <th onclick="w3.sortHTML('#user/manager', '.item', 'td:nth-child(3)')" style="cursor:pointer">
+                                Graph</th>
+                            <th onclick="w3.sortHTML('#user/manager', '.item', 'td:nth-child(4)')" style="cursor:pointer">
+                                Keyword Reference</th>
+
+                        </tr>
+
+                        {% for item in results %}
+                        <tr class="item">
+                            <td>{{item.id}}</td>
+                            <td><a href="{{item.URI}}" target="_blank">{{item.URI}}</a></td>
+                            <td><a href="{{item.graph}}" target="_blank">{{item.graph}}</a></td>
+                            <td>{{item.keyword_reference}}</td>
+
+
+                        {% endfor %}
+
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+

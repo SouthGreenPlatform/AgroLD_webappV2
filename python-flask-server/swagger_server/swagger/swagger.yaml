@@ -1,0 +1,2151 @@
+---
+swagger: "2.0"
+info:
+  description: "This page provides information about the RESTful API of AgroLD."
+  version: "2.0 beta"
+  title: "AgroLD API"
+  termsOfService: "http://www.agrold.org"
+  contact:
+    email: "agrolinkeddata@gmail.com"
+  license:
+    name: "IBC Montpellier"
+    url: "http://agrold.southgreen.fr/agrold/about.jsp"
+host: "agrold.southgreen.fr"
+basePath: "/agrold/api"
+tags:
+- name: "management"
+  description: "Handle customizable web sevices"
+- name: "customizable"
+  description: "customizable web services"
+- name: "general"
+  description: "General Services"
+- name: "gene"
+  description: "Services over genes"
+- name: "protein"
+  description: "Services over proteins"
+- name: "qtl"
+  description: "Services over QTLs"
+- name: "pathway"
+  description: "Services over pathways"
+schemes:
+- "http"
+paths:
+  /graphs{format}:
+    get:
+      tags:
+      - "general"
+      summary: "list all the graphs of AgroLD"
+      description: ""
+      operationId: "listgraphs"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        "404":
+          description: "Invalid HTTP method"
+      x-swagger-router-controller: "swagger_server.controllers.general_controller"
+  /ontologies/terms/byKeyword{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Returns all the IDs corresponding to an ontological term"
+      description: ""
+      operationId: "get_ontology_terms_by_key_word"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "keyword"
+        in: "query"
+        description: "The keyword (e.g. homoaconitate)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /sparql:
+    get:
+      tags:
+      - "general"
+      summary: "Run a sparql query"
+      description: ""
+      operationId: "sparql"
+      produces:
+      - "text/csv"
+      - "application/json"
+      - "text/plain"
+      - "text/turtle"
+      - "application/sparql-results+xml"
+      - "application/rdf+xml"
+      - "text/tab-separated-values"
+      - "application/sparql-results+json"
+      parameters:
+      - name: "query"
+        in: "query"
+        description: "a sparql query (e.g. select distinct ?Concept where {[] a ?Concept}\
+          \ LIMIT 5 , Describe &lt;http://purl.obolibrary.org/obo/TO_0000040 &gt;)"
+        required: true
+        type: "string"
+      - name: "format"
+        in: "query"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - "text/csv"
+        - "text/html"
+        - "application/json"
+        - "text/plain"
+        - "text/turtle"
+        - "application/sparql-results+xml"
+        - "application/rdf+xml"
+        - "text/tab-separated-values"
+        - "application/sparql-results+json"
+        - "XML"
+      responses:
+        "200":
+          description: "successful operation"
+        "404":
+          description: "Invalid HTTP method"
+      x-swagger-router-controller: "swagger_server.controllers.general_controller"
+  /pathways/inWhichParticipatesGene/byId{format}:
+    get:
+      tags:
+      - "pathway"
+      summary: "Retrieve IRI and name of pathways in which an id-given gene participates"
+      description: ""
+      operationId: "get_pathways_in_which_participates_gene"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "geneId"
+        in: "query"
+        description: "Id of the gene (e.g. GRMZM2G004534, AT5G18200, Sb01g025590.1,\
+          \ LOC_Os02g35870.1, AT4G01970)"
+        required: true
+        type: "integer"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "Unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.pathway_controller"
+  /qtls/associatedWithProteinId{format}:
+    get:
+      tags:
+      - "qtl"
+      summary: "Get the list of QTLs associated with an protein Id"
+      description: ""
+      operationId: "get_qtls_associated_with_protein_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "proteinId"
+        in: "query"
+        description: "The id of the protein (e.g. Q9LL45)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.qtl_controller"
+  /qtls{format}:
+    get:
+      tags:
+      - "qtl"
+      summary: "Retrieve complete URI and description of all QTLs from AgroLD"
+      description: ""
+      operationId: "get_qtls"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.qtl_controller"
+  /genes/NumberOfCDS{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Retrieve complete URI and description of all genes from AgroLD in\
+        \ JSON format"
+      description: ""
+      operationId: "get_cds_gene"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /predicates{format}:
+    get:
+      tags:
+      - "general"
+      summary: "Retrieve complete URI of all predicates used in AgroLD in JSON"
+      description: ""
+      operationId: "get_graph_predicates"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "graphLocalName"
+        in: "query"
+        description: "The local name of the graph in the namespace http://www.southgreen.fr/agrold/\
+          \ of AgroLD (e.g. gramene.genes)"
+        required: true
+        type: "string"
+        enum:
+        - "so"
+        - "go"
+        - "eco"
+        - "eo"
+        - "pato"
+        - "po"
+        - "to"
+        - "ncbitaxon"
+        - "gramene.genes"
+        - "uniprot.plants"
+        - "protein.annotations"
+        - "orygenesdb.o.s.indica"
+        - "orygenesdb.o.s.thaliana"
+        - "orygenesdb.o.s.japonica"
+        - "greenphyldb"
+        - "topgene"
+        - "qtl.annotations"
+        - "otl"
+        - "gramene.cyc"
+        - "gramene.qtl"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set"
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "Unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.general_controller"
+  /qtls/byKeyword{format}:
+    get:
+      tags:
+      - "qtl"
+      summary: "Retrieve QTLs with URI or name or description containing the given\
+        \ keyword"
+      description: ""
+      operationId: "get_qtls_by_key_word"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "keyword"
+        in: "query"
+        description: "The keyword to find (e.g. BNL6.32, flw4)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.qtl_controller"
+  /ontologies/terms/associatedWithGene{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Get the ontological annotation associated with the Gene"
+      description: ""
+      operationId: "get_onto_terms_associated_with_gene"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "geneId"
+        in: "query"
+        description: "The id of the gene (e.g. OS02G0803700, OS06G0127000, AT1G09040,\
+          \ AT5G38250)"
+        required: true
+        type: "string"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /proteins/EncodedByGene{format}:
+    get:
+      tags:
+      - "protein"
+      summary: "Get URIs, ids, and name of proteins encoded by a gene given its ID"
+      description: ""
+      operationId: "get_proteins_encoded_by_gene"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "geneId"
+        in: "query"
+        description: "The id of the gene (e.g. BAE47665, AT2G19710, AT4G35730)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.protein_controller"
+  /proteins/associatedWithQTL{format}:
+    get:
+      tags:
+      - "protein"
+      summary: "Get URIs, ids, and name of proteins associated with a QTL"
+      description: ""
+      operationId: "get_proteins_associated_with_qtl"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "qtlId"
+        in: "query"
+        description: "The id of the QTL (e.g. AQAA003)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.protein_controller"
+  /describe{format}:
+    get:
+      tags:
+      - "general"
+      summary: "Retrieve complete description of a resource from AgroLD in JSON format"
+      description: ""
+      operationId: "get_description"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "uri"
+        in: "query"
+        description: "URI of the resource (e.g. http://www.southgreen.fr/agrold/ricecyc.pathway/FERMENTATION-PWY)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.general_controller"
+  /proteins/id/associatedWithOntoId{format}:
+    get:
+      tags:
+      - "protein"
+      summary: "Get ids of proteins associated with an ontological Id"
+      description: ""
+      operationId: "get_protein_id_associated_with_onto_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "ontoId"
+        in: "query"
+        description: "The id of the ontological element (e.g. GO:0003824)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.protein_controller"
+  /genes/encodingProtein{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Get URIs, ids, and name of genes encoding a protein given its ID"
+      description: ""
+      operationId: "get_genes_encoding_proteins"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "proteinId"
+        in: "query"
+        description: "The id of the gene (e.g. Q35985)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /ontologies/ids/byterm{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Returns all the IDs corresponding to an ontological term"
+      description: ""
+      operationId: "get_id_by_onto_term"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "ontoTerm"
+        in: "query"
+        description: "The ontological term (e.g. homoaconitate hydratase activity)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /genes/participatingInPathway{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Complete URI of gene's description by pathway"
+      description: ""
+      operationId: "get_genes_by_pathways"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /ontologies/terms/associatedWithQtl{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Get the ontological terms associated with the QTL, and the association"
+      description: ""
+      operationId: "get_onto_terms_associated_with_qtl"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "qtlId"
+        in: "query"
+        description: "The id of the QTL (e.g. AQA001)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /ontologies/terms/children/byId{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Returns the children of an ontological element given its id"
+      description: ""
+      operationId: "get_children_by_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "The ID of an ontological resource (e.g. GO:0003824)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /genes/byLocus{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Give me the genes on chromosome chromosomeNum whose start position\
+        \ is between chromosomeStart and chromosomeEnd"
+      description: ""
+      operationId: "get_genes_by_locus"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "chromosomeNum"
+        in: "query"
+        description: "The chromosome number (e.g. 01)"
+        required: true
+        type: "string"
+      - name: "chromosomeStart"
+        in: "query"
+        description: "The chromosome starting position (e.g. 10000)"
+        required: true
+        type: "string"
+      - name: "chromosomeEnd"
+        in: "query"
+        description: "The chromosome ending position (e.g. 30000)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /proteins/byKeyword{format}:
+    get:
+      tags:
+      - "protein"
+      summary: "Retrieve proteins with URI or name or description containing the given\
+        \ keyword"
+      description: ""
+      operationId: "get_proteins_by_key_word"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "keyword"
+        in: "query"
+        description: "The keyword to find (e.g. Putative, tbp1, leaf)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.protein_controller"
+  /genes{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Retrieve complete URI and description of all genes from AgroLD in\
+        \ JSON format"
+      description: ""
+      operationId: "get_genes"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /ontologies/terms/byId{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Returns the name of an ontological element corresponding to its given\
+        \ ID"
+      description: ""
+      operationId: "get_onto_term_by_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "The id (e.g. GO:0003824)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /webservices:
+    get:
+      tags:
+      - "management"
+      summary: "JSON file containing this RESTful API's specification in the SWAGGER\
+        \ format"
+      description: ""
+      operationId: "get_services_specifications"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "Unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.management_controller"
+    post:
+      tags:
+      - "management"
+      summary: "Update a customizable web service"
+      description: ""
+      operationId: "update_service"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the service to update as supported by the HTTP protocol"
+        required: true
+        type: "string"
+      - name: "httpMethod"
+        in: "query"
+        description: "The the HTTP protocol method"
+        required: true
+        type: "string"
+        enum:
+        - "get"
+        - "post"
+      - in: "body"
+        name: "specification"
+        description: "The specification of the service to be updated. Specify only the fields to be modified."
+        required: true
+        schema:
+          $ref: "#/definitions/webservice"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "Unexpected error"
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: "swagger_server.controllers.management_controller"
+    put:
+      tags:
+      - "management"
+      summary: "Create  a new customizable web service (if it exists one with the\
+        \ same name and HTTP method this should be a new version)"
+      description: ""
+      operationId: "add_service"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the service (e.g. servicename{format})"
+        required: true
+        type: "string"
+      - name: "httpMethod"
+        in: "query"
+        description: "The the HTTP protocol method (use POST to pass parameters in\
+          \ the request body instead of the query)"
+        required: true
+        type: "string"
+        enum:
+        - "get"
+        - "post"
+      - in: "body"
+        name: "specification"
+        description: "The specification of the service to create"
+        required: true
+        schema:
+          $ref: "#/definitions/webservice"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "Unexpected error"
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: "swagger_server.controllers.management_controller"
+    delete:
+      tags:
+      - "management"
+      summary: "Delete a customizable web service"
+      description: ""
+      operationId: "delete_service"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the service to update as supported by the HTTP protocol"
+        required: true
+        type: "string"
+      - name: "httpMethod"
+        in: "query"
+        description: "The the HTTP protocol method"
+        required: true
+        type: "string"
+        enum:
+        - "get"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "Unexpected error"
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: "swagger_server.controllers.management_controller"
+  /ontologies/terms/ancestors/byId{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Returns all the IDs corresponding to an ontological term"
+      description: ""
+      operationId: "get_ancestor_by_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "The ID of an ontological resource (e.g. GO:0004409 or G0:0016836)"
+        required: true
+        type: "string"
+      - name: "level"
+        in: "query"
+        description: "The level of the ancestor (e.g. the level of the direct parent\
+          \ is 1)"
+        required: true
+        type: "integer"
+        minimum: 1
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /ontologies/terms/associatedWithProtein{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Get the ontological terms associated with the Protein, and the association"
+      description: ""
+      operationId: "get_onto_terms_associated_with_protein"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "proteinId"
+        in: "query"
+        description: "The id of the protein (e.g. A0A060D1L3)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /genes/byKeyword{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Retrieve genes with the URI or the name or the description containing the given keyword"
+      description: ""
+      operationId: "get_genes_by_key_word"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "keyword"
+        in: "query"
+        description: "The keyword to find (e.g. FRK1, tcp2, stachyose, TBP1, fermentation, rice, oryza)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 = the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /genes/publications/byId{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Get publications of a gene"
+      description: ""
+      operationId: "get_publications_of_gene_by_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "geneId"
+        in: "query"
+        description: "The ID of the gene (e.g. Os05t0125000-01)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /proteins{format}:
+    get:
+      tags:
+      - "protein"
+      summary: "Retrieve complete URI and description of all proteins from AgroLD\
+        \ in JSON format"
+      description: ""
+      operationId: "get_proteins"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.protein_controller"
+  /genes/seeAlso{format}:
+    get:
+      tags:
+      - "gene"
+      summary: "Retrieve the other links refering to this gene"
+      description: ""
+      operationId: "get_see_also_by_uri"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "geneUri"
+        in: "query"
+        description: "An URI of a gene (e.g. http://identifiers.org/ensembl.plant/AT3G62670,\
+          \ http://identifiers.org/rapdb.gene/Os01g0101500)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.gene_controller"
+  /ontologies/terms/parents/byId{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Returns the parents of an ontological element given its id"
+      description: ""
+      operationId: "get_parent_by_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "The ID of an ontological resource (e.g. GO:0004409)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /ontologies/terms/descendants/byId{format}:
+    get:
+      tags:
+      - "ontologies"
+      summary: "Returns the descendents of an ontological element given its id"
+      description: ""
+      operationId: "get_descendent_by_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "The ID of an ontological resource (e.g. GO:0003824)"
+        required: true
+        type: "string"
+      - name: "level"
+        in: "query"
+        description: "The level of the descendent (e.g. the level of the direct children\
+          \ is 1)"
+        required: true
+        type: "integer"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.ontologies_controller"
+  /pathways/byKeyword{format}:
+    get:
+      tags:
+      - "pathway"
+      summary: "Retrieve IRI and name of pathways given a keyword"
+      description: ""
+      operationId: "get_pathways_by_key_word"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "keyword"
+        in: "query"
+        description: "Id of the gene (e.g. fermentation, acetate)"
+        required: true
+        type: "integer"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "Unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.pathway_controller"
+  /customizable/get_all_species:
+    get:
+      tags:
+      - "customizable"
+      summary: "this service retrieves all species available in AgroLD."
+      description: "string"
+      operationId: "get_service_name"
+      produces:
+      - "text/plain"
+      - "text/xml"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.customizable_controller"
+  /customizable/graph_relations:
+    get:
+      tags:
+      - "customizable"
+      - "general"
+      summary: "Retrieve complete URI of all predicates used in AgroLD in JSON"
+      description: "BASE <http://www.southgreen.fr/agrold/>\nPREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\
+        PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT distinct ?relation\n\
+        WHERE { \n GRAPH ?graph { \n  ?subject ?relation ?object . \n } \n} \nORDER\
+        \ BY ?relation \nOFFSET ?page \nLIMIT ?pageSize"
+      operationId: "get_graph_relations"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "application/rdf+xml"
+      - "text/turtle"
+      - "text/plain"
+      - "text/x-html+tr"
+      - "application/vnd.ms-excel"
+      - "application/javascript"
+      parameters:
+      - name: "graph"
+        in: "query"
+        description: "exemple: <gramene.genes>"
+        required: false
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.customizable_controller"
+  /qtls/id/associatedWithOntoId{format}:
+    get:
+      tags:
+      - "qtl"
+      summary: "Get ids of QTLs associated with an ontological Id"
+      description: ""
+      operationId: "get_qtls_id_associated_with_onto_id"
+      produces:
+      - "text/html"
+      - "application/sparql-results+json"
+      - "application/json"
+      - "application/sparql-results+xml"
+      - "text/tab-separated-values"
+      - "text/csv"
+      - "rdf/xml"
+      - "text/turtle"
+      - "text/plain"
+      parameters:
+      - name: "ontoId"
+        in: "query"
+        description: "The id of the ontological element (e.g. TO:0000040, TO:0000207,\
+          \ TO_0000370)"
+        required: true
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      - name: "format"
+        in: "path"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
+        required: true
+        type: "string"
+        enum:
+        - ".json"
+        - ".jsonld"
+        - ".xml"
+        - ".tsv"
+        - ".csv"
+        - ".rdf"
+        - ".html"
+        - ".ttl"
+        - ".n3"
+      responses:
+        "200":
+          description: "successful operation"
+        default:
+          description: "unexpected error"
+      x-swagger-router-controller: "swagger_server.controllers.qtl_controller"
+securityDefinitions:
+  basicAuth:
+    type: "basic"
+definitions:
+  webservice:
+    type: "object"
+    required:
+    - "operationId"
+    - "responses"
+    - "sparql"
+    properties:
+      summary:
+        type: "string"
+        example: "this service retrieves ..."
+      produces:
+        type: "array"
+        example:
+        - "text/plain"
+        - "text/xml"
+        items:
+          type: "string"
+          description: "Response mime-type"
+      description:
+        type: "string"
+      operationId:
+        type: "string"
+        example: "getServiceName"
+      responses:
+        type: "object"
+        example:
+          "200":
+            description: "successful operation"
+        additionalProperties:
+          type: "object"
+          properties: {}
+      sparql:
+        type: "string"
+        example: "BASE <http://www.southgreen.fr/agrold/>\nPREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\
+          PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT distinct ?relation\n\
+          WHERE { \n GRAPH ?graph { \n  ?subject ?relation ?object . \n } \n} \nORDER\
+          \ BY ?relation \nOFFSET ?page \nLIMIT ?pageSize"
+      parameters:
+        type: "array"
+        example:
+        - in: "query"
+          name: "page"
+          description: "number (>= 0) of the page of the result set to display (0\
+            \ = the first page by default)"
+          type: "integer"
+          required: false
+        - in: "query"
+          name: "pageSize"
+          description: "size of a page of the result set. If = 0 then all results\
+            \ will be displayed. Default value: 10."
+          type: "integer"
+          required: false
+        items:
+          $ref: "#/definitions/webservice_parameters"
+      tags:
+        type: "array"
+        items:
+          type: "string"
+          example: "customizable"
+          description: "a section of the interactive documentation ('customizable'\
+            \ wil be added automatically)"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+        example: 200
+      type:
+        type: "string"
+      message:
+        type: "string"
+  webservice_parameters:
+    type: "object"
+    required:
+    - "in"
+    - "name"
+    - "required"
+    properties:
+      in:
+        type: "string"
+      name:
+        type: "string"
+      description:
+        type: "string"
+      type:
+        type: "string"
+      enum:
+        type: "array"
+        items:
+          type: "string"
+      required:
+        type: "boolean"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

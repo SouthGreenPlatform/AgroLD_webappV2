@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form method="GET" style="position: ">
+                  <div style="text-align: center">
+    <!--ul>
+    <li>ontological concepts: 'plant height' or 'regulation of gene expression'</li>
+    <li>Gene: keyword 'stachyose' or name 'TCP2'.</li>
+    <li>Pathway:  keywords 'fermentation' or 'acetate' or 'cytokinins'</li>
+    <li>protein:  name 'TBP1', keyword 'qtl'</li>
+    <li>QTL: name 'BNL6.32' or keyword 'trait'</li>
+    </ul-->
+Some examples:<br>
+ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
+    Gene: keywords 'stachyose', 'protein_coding', 'qtl', 'Constitutive flowering repressor', 'fungal growth'; or name 'TCP2'.<br>
+    Pathway:  keywords 'fermentation' or 'acetate' or 'cytokinins'.<br>
+    protein:  name 'TBP1', keyword 'qtl'.<br>
+    QTL: name 'BNL6.32' or keyword 'trait'.<br>
+</div>
+
+<!--<center>
+    <div class="container">
+        <form id="sform">
+                <option value="" default>--- Select a type* ---</option>
+                <option value="gene">Gene</option>
+                <option value="protein">Protein</option>
+                <option value="qtl">QTL</option>
+                <option value="pathway">Pathway</option>
+                <option value="ontology">Ontology</option>
+            </select>
+            <input id="input" class="keyword" name="keyword" type="text" autofocus placeholder="Type here ..." style="display: inline"/>
+            <input id="submit" class="yasrbtn" type="submit" value="Search" style="display: inline"/>
+        </form>
+    </div>
+</center>-->
+<!-- TEST -->
+<div class="Q-Search A-Search">
+    <div class="container delim">
+        <div class="row">
+            <div class="col-lg-12">
+                <span style="color:#ff0000" id="message"></span>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <select name="type" id="type" placeholder="Filter by" id="afft" value="" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <option value="genes">Gene</option>
+                            <option value="proteins">Protein</option>
+                            <option value="qtls">QTL</option>
+                            <option value="pathways">Pathway</option>
+                            <option value="ontologies">Ontology</option>
+                        </select>
+                    </div>
+                    <input id="keyword" class="keyword" name="keyword" type="text" autofocus="" placeholder="Search term..." style="height: 34px">
+
+                    </style>
+                    <span class="input-group-btn">
+                         <button class="btn btn-primary" id="jcb" value="Search" type="submit">Search</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </form>
+    <table id="depart_manager" class="table table-hover table-dark" style ="background-color: white">
+
+    </style>
+
+                    <tr>
+                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(1)')" style="cursor:pointer">
+                            ID
+                        </th>
+                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(2)')" style="cursor:pointer">
+                            URI</th>
+                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(3)')" style="cursor:pointer">
+                            graph</th>
+                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(4)')" style="cursor:pointer">
+                            keyword_reference</th>
+
+                    </tr>
+    {% if keyword %}
+        {% for gene in genes %}
+        <tr class="gene">
+        <td>{{ gene["Id"] }}</td>
+        <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
+        <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
+        <td>{{ gene["keyword_reference"] }}</td>
+        <td><a href="http://agrold.southgreen.fr/agrold/agrold_explorer.jsp?iri={{ gene['URI'] }}" target="_blank" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Visualize </a></td>
+        <td><a href="http://127.0.0.1:5000/test/sparql?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Sparql </a></td>
+        </tr>
+        {% endfor %}
+    {% else %}
+    Please submit a keyword
+    {% endif %}
+    </table>
+    <script language="javascript">
+
+            document.getElementById("jcb").onclick = function () {
+                document.getElementById("depart_manager").style.display = 'block';
+            };
+
+        </script>
+{% endblock %}
+{% block script %}style="position: inherit;"{% endblock %}

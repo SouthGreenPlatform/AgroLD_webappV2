@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container delim">
+                                <div style="text-align: center">
+                                    <div class="exp">
+                                        <h4><b>Search and browse AgroLD</b></h4>
+                                        <p>Search examples: ontological concepts - 'plant height' or 'regulation of gene expression'; gene names -
+                                            'GRP2' or 'TCP12'.</p>
+                                    </div>
+                                </div>
+                                <div id="sform">
+                                    <center>
+                                    <form id="search" action="http://agrold.southgreen.fr/fct/facet.vsp?cmd=text&amp;sid=231" "="" method="post" target="_blank">
+                                    <!--form id="search" action="http://volvestre.cirad.fr:8890/fct/facet.vsp?cmd=text&sid=231"" method="post" target="_blank"-->
+                                        <div class="col-lg-12">
+                                            <div class="input-group">
+                                                <!--input type="text" class="form-control" placeholder="Search for..."-->
+                                                <input class="keyword form-control" name="q" type="text" placeholder="Search examples: Gene names -
+                                            'GRP2' or 'TCP12' or Keywords 'plant height'" data-step="1" data-intro="Type your expression and then ...">
+                                                <span class="input-group-btn">
+                                                    <input class="btn btn-secondary" type="submit" value="Search" data-step="2" data-intro="launch the search engine!" required="">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="error"></div>
+                                    <div class="success"></div>
+                                    <span style="margin-top:30px;color:red;display:none" class="message">Please enter a keword</span>
+                                    <script>
+                                        $('form#search').click(function(e){
+                                            var request=$(".keyword").val();
+                                            console.log('request'+request);
+                                             if(request==""){
+                                                $('.message').show();
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }else{
+                                                $('.message').hide();
+                                                saveRequest(request);
+                                            }
+                                        });
+
+                                        function saveRequest(keyword){
+                                            $.ajax({
+                                                type:'post',
+                                                data:'p={m:"setQuickSearch",keyword:'+keyword+'}',
+                                                url:'ToolHistory',
+                                                success:function(data){
+                                                    $('.success').html(data);
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                </center>
+                            </div>
+                        </div>
+{% endblock %}
