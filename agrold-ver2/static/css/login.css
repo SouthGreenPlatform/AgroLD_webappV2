@@ -8,7 +8,7 @@ body {
   position: relative;
   height: 100%;
   width: 100%;
-  background: url(https://w.wallhaven.cc/full/ey/wallhaven-eymzjk.jpg);
+  background: url("background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
