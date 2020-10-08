@@ -141,15 +141,15 @@ def sparql():
 
 @app.route('/sparql1', methods = ['GET'])
 def sparql1():
-    query = request.args.get('query')
-    results = None
-    if query:
-        sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
-        sparql.setQuery("""
-            %s
-        """ % query)
-        sparql.setReturnFormat(JSON)
-        results = sparql.query().convert()
-    return render_template('sparql.html', results=results, query=query)
+    #query = request.args.get('query')
+    #results = None
+    #if query:
+    #    sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
+    #    sparql.setQuery("""
+    #        %s
+    #    """ % query)
+    #    sparql.setReturnFormat(JSON)
+    #    results = sparql.query().convert() , results=results, query=query
+    return render_template('sparql.html')
 if __name__ == '__main__':
     app.run(Debug = True)
