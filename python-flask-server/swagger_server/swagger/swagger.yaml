@@ -298,6 +298,33 @@ paths:
         default:
           description: "unexpected error"
       x-swagger-router-controller: "swagger_server.controllers.qtl_controller"
+  /customizable/ton:
+    get:
+      tags:
+      - "customizable"
+      summary: "this service retrieves tons of tons"
+      description: "here's a ton"
+      operationId: "get_ton"
+      produces:
+      - "text/plain"
+      - "text/xml"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
+        required: false
+        type: "integer"
+      - name: "pageSize"
+        in: "query"
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+      x-swagger-router-controller: "swagger_server.controllers.customizable_controller"
   /qtls{format}:
     get:
       tags:
@@ -1333,7 +1360,8 @@ paths:
         - "post"
       - in: "body"
         name: "specification"
-        description: "The specification of the service to be updated. Specify only the fields to be modified."
+        description: "The specification of the service to be updated. Sepecify only\
+          \ the fields to be modified."
         required: true
         schema:
           $ref: "#/definitions/webservice"
@@ -1535,7 +1563,8 @@ paths:
     get:
       tags:
       - "gene"
-      summary: "Retrieve genes with the URI or the name or the description containing the given keyword"
+      summary: "Retrieve genes with the URI or the name or the description containing\
+        \ the given keyword"
       description: ""
       operationId: "get_genes_by_key_word"
       produces:
@@ -1551,22 +1580,26 @@ paths:
       parameters:
       - name: "keyword"
         in: "query"
-        description: "The keyword to find (e.g. FRK1, tcp2, stachyose, TBP1, fermentation, rice, oryza)"
+        description: "The keyword to find (e.g. FRK1, tcp2, stachyose, TBP1, fermentation,\
+          \ rice, oryza)"
         required: true
         type: "string"
       - name: "page"
         in: "query"
-        description: "number (>= 0) of the page of the result set to display (0 = the first page by default)"
+        description: "number (>= 0) of the page of the result set to display (0 =\
+          \ the first page by default)"
         required: false
         type: "integer"
       - name: "pageSize"
         in: "query"
-        description: "size of a page of the result set. If = 0 then all results will be displayed. Default value: 10."
+        description: "size of a page of the result set. If = 0 then all results will\
+          \ be displayed. Default value: 10."
         required: false
         type: "integer"
       - name: "format"
         in: "path"
-        description: "format in which the results set will be return (if empty or not supported, JSON is returned by default)"
+        description: "format in which the results set will be return (if empty or\
+          \ not supported, JSON is returned by default)"
         required: true
         type: "string"
         enum:
@@ -1918,33 +1951,6 @@ paths:
         default:
           description: "Unexpected error"
       x-swagger-router-controller: "swagger_server.controllers.pathway_controller"
-  /customizable/get_all_species:
-    get:
-      tags:
-      - "customizable"
-      summary: "this service retrieves all species available in AgroLD."
-      description: "string"
-      operationId: "get_service_name"
-      produces:
-      - "text/plain"
-      - "text/xml"
-      parameters:
-      - name: "page"
-        in: "query"
-        description: "number (>= 0) of the page of the result set to display (0 =\
-          \ the first page by default)"
-        required: false
-        type: "integer"
-      - name: "pageSize"
-        in: "query"
-        description: "size of a page of the result set. If = 0 then all results will\
-          \ be displayed. Default value: 10."
-        required: false
-        type: "integer"
-      responses:
-        "200":
-          description: "successful operation"
-      x-swagger-router-controller: "swagger_server.controllers.customizable_controller"
   /customizable/graph_relations:
     get:
       tags:

@@ -21,10 +21,10 @@ def get_graph_relations(graph=None, page=None, pageSize=None):  # noqa: E501
     return 'do some magic!'
 
 
-def get_service_name(page=None, pageSize=None):  # noqa: E501
-    """this service retrieves all species available in AgroLD.
+def get_ton(page=None, pageSize=None):  # noqa: E501
+    """this service retrieves tons of tons
 
-    string # noqa: E501
+    here&#39;s a ton # noqa: E501
 
     :param page: number (&gt;&#x3D; 0) of the page of the result set to display (0 &#x3D; the first page by default)
     :type page: int

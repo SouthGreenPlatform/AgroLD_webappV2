@@ -54,7 +54,7 @@
                 }
                 if (!(query.match(/\bconstruct\b/i) || query.match(/\bdescribe\b/i)) && lastformat != 1) {
                     for (var i = format.options.length; i > 0; i--)
-                        format.options[i] = null;
+                    format.options[i] = null;
                     format.options[1] = new Option('HTML', 'text/html');
                     format.options[2] = new Option('Spreadsheet', 'application/vnd.ms-excel');
                     format.options[3] = new Option('XML', 'application/sparql-results+xml');
@@ -289,7 +289,7 @@ LIMIT 10
         divpatt.innerHTML += "<ol>";
         for (i = 0; i < patternlabels.length; i++) {
             var li = document.createElement("li");
-            li.innerHTML = patternlabels[i] + " (<a href= onclick=\"selectPattern(" + i + ")\">select</a>)";
+            li.innerHTML = patternlabels[i] + " (<a href=\"#\" onclick=\"selectPattern(" + i + ")\">select</a>)";
             ol.appendChild(li);
             //divpatt.innerHTML += //qpatterns[selectedpattern][i] + ': <input class="aparameter" value="' + qpatterns[selectedpattern][i] + '" oninput="replaceParaValue(' + "/" + qpatterns[selectedpattern][i] + "/g" + ', this)"/><br><br>';
         }

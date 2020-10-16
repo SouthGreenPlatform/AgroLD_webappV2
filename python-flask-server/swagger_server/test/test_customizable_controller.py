@@ -26,15 +26,15 @@ class TestCustomizableController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_get_service_name(self):
-        """Test case for get_service_name
+    def test_get_ton(self):
+        """Test case for get_ton
 
-        this service retrieves all species available in AgroLD.
+        this service retrieves tons of tons
         """
         query_string = [('page', 56),
                         ('pageSize', 56)]
         response = self.client.open(
-            '/api/customizable/get_all_species',
+            '/api/customizable/ton',
             method='GET',
             query_string=query_string)
         self.assert200(response,
