@@ -150,6 +150,9 @@ def sparql1():
     #    """ % query)
     #    sparql.setReturnFormat(JSON)
     #    results = sparql.query().convert() , results=results, query=query
+    if request.method == 'GET':
+        query = request.args.get('query')
+        return render_template('sparql.html', query = query)
     return render_template('sparql.html')
 if __name__ == '__main__':
     app.run(Debug = True)

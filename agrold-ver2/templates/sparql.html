@@ -7,7 +7,16 @@
 
 
 <!--link href="styles/menu1.css" rel="stylesheet" type="text/css"/-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70148286-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
 
+            gtag('config', 'UA-70148286-1');
+        </script>
 <script type="text/javascript" src="static/config/config.js"></script>
 
             <!-- YasQUE pour la coloration syntaxique -->
@@ -310,12 +319,12 @@ LIMIT 10
                 }, 1000);
             });
         };
-
+        var $j=jQuery.noConflict();
         var yasqe = YASQE.fromTextArea(document.getElementById('query'),
                 {
                     sparql: {
                         showQueryButton: true,
-                        endpoint: SPARQLENDPOINTURL,
+                        endpoint: "http://agrold.southgreen.fr/sparql",
                         collapsePrefixesOnLoad: false,
                         //persistent: true,
                         args: [{name: 'timeout', value: document.getElementById('timeout').value}],
@@ -326,10 +335,10 @@ LIMIT 10
                             },
                             success: function (data) {
                                 //console.log("success", data);
-                                $('#yasr').scrollView();
+                                $j('#yasr').scrollView();
                             }, //, headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT", "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, X-Codingpedia"}
                             error: function (data) {
-                                $('#yasr').scrollView();
+                                $j('#yasr').scrollView();
                             }
                         }
                     }
