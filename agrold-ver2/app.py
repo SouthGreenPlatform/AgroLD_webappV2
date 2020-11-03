@@ -154,5 +154,43 @@ def sparql1():
         query = request.args.get('query')
         return render_template('sparql.html', query = query)
     return render_template('sparql.html')
+@app.route('/testing', methods = ['GET'])
+def testing():
+    if request.method == 'GET':
+        keyword = request.args.get('keyword')
+        return render_template('display.html', keyword = keyword)
+    return render_template('display.html')
+
+
+
+@app.route('/test/display', methods = ['GET'])
+def display():
+    entity_uri = request.args.get('entity_uri')
+    results = None
+    if entity_uri:
+        sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
+
+        sparql.setQuery("""
+            BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX uniprot:<http://purl.uniprot.org/uniprot/>
+SELECT ?property ?hasValue ?isValueOf
+WHERE {
+values (?q){(<%s>)}
+  { ?q ?property ?hasValue }
+  UNION
+  { ?isValueOf ?property ?q }
+}
+        """ % entity_uri)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+
+        # for result in results["results"]["bindings"]:
+            # print(result["property"], result["hasValue"])
+    return render_template('displaybeta.html', results=results, entity_uri=entity_uri)
+
+
+
 if __name__ == '__main__':
     app.run(Debug = True)

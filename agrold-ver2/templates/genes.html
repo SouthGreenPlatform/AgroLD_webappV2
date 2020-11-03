@@ -80,7 +80,7 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
     {% if keyword %}
         {% for gene in genes %}
         <tr class="gene">
-        <td>{{ gene["Id"] }}</td>
+        <td>{{ gene["Id"] }} <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a></td>
         <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
         <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
         <td>{{ gene["keyword_reference"] }}</td>
