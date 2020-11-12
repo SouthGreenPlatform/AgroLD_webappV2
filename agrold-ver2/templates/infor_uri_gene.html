@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+
+/* Style tab links */
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: black;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+</style>
+<div style="background-color: white">
+
+
+<!-- create page tab-->
+
+    <button class="tablink" onclick="openPage('protein', this, 'red') " id="defaultOpen" >Protein</button>
+    <button class="tablink" onclick="openPage('pathway', this, 'green')" >Pathway</button>
+    <button class="tablink" onclick="openPage('publication', this, 'blue')">Publication</button>
+    <button class="tablink" onclick="openPage('term_asso', this, 'orange')">Term associated</button>
+    <button class="tablink" onclick="openPage('expression', this, 'yellow')">Expression</button>
+
+
+
+
+    <div id="protein" class="tabcontent">
+      {% if entity_uri %}
+        <table id="protein_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_protein["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for result in results_protein["results"]["bindings"] %}
+                  <tr>
+                    {% for var in results_protein["head"]["vars"] %}
+                      <td>{{result[var]["value"] if var in result else ""}}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    <div id="pathway"  class="tabcontent">
+      {% if entity_id %}
+        <table id="pathway_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_pathway["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                  {% for result in results_pathway["results"]["bindings"] %}
+                    <tr>
+                      {% for var in results_pathway["head"]["vars"] %}
+                        <td>{{result[var]["value"] if var in result else ""}}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% endif %}
+    </div>
+
+    <div id="publication"  class="tabcontent">
+      {% if entity_id %}
+        <table id="publication_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_publication["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                  {% for result in results_publication["results"]["bindings"] %}
+                    <tr>
+                      {% for var in results_publication["head"]["vars"] %}
+                        <td>{{result[var]["value"] if var in result else ""}}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    <div id="term_asso"  class="tabcontent">
+      {% if entity_uri %}
+        <table id="term_asso_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_term_asso["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for result in results_term_asso["results"]["bindings"] %}
+                  <tr>
+                    {% for var in results_term_asso["head"]["vars"] %}
+                      <td>{{result[var]["value"] if var in result else ""}}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
+    <div id="expression"  class="tabcontent">
+      {% if entity_uri %}
+      <div style="position: absolute;">
+        <li><a href="https://www.ebi.ac.uk/gxa/genes/{{entity_id}}" target="_blank">Expression Atlas</a></li>
+        <li><a href="http://expression.ic4r.org/global-search?gene={{entity_id}}" target="_blank">IC4R Rice Expression Database</a></li>
+        <li><a href="http://ic4r.org/genes/IC4R-{{entity_id}}" target="_blank">IC4R  Information Commons for Rice</a></li>
+      </div>
+      {% endif %}
+    </div>
+
+
+  </div>
+
+
+<script type="text/javascript">
+      function openPage(pageName, elmnt, color) {
+  // Hide all elements with class="tabcontent" by default */
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Remove the background color of all tablinks/buttons
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+
+  // Show the specific tab content
+  document.getElementById(pageName).style.display = "block";
+
+  // Add the specific color to the button used to open the tab content
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $.noConflict();
+            var table = $('#protein_table').DataTable();
+            var table = $('#pathway_table').DataTable();
+            var table = $('#publication_table').DataTable();
+            var table = $('#term_asso_table').DataTable();
+        });
+</script>
+{% endblock %}
+{% block script %}style="position: inherit;"{% endblock %}

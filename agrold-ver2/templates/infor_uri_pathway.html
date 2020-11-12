@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+
+/* Style tab links */
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: black;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+</style>
+<div style="background-color: white">
+
+
+<!-- create page tab-->
+
+<button class="tablink" onclick="openPage('parti_genes', this, 'red') " id="defaultOpen" >Participating Genes</button>
+
+
+
+<div id="parti_genes"  class="tabcontent">
+      {% if entity_uri %}
+        <table id="parti_genes_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_parti_genes["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                  {% for result in results_parti_genes["results"]["bindings"] %}
+                    <tr>
+                      {% for var in results_parti_genes["head"]["vars"] %}
+                        <td>{{result[var]["value"] if var in result else ""}}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
+ </div>
+
+
+<script type="text/javascript">
+      function openPage(pageName, elmnt, color) {
+  // Hide all elements with class="tabcontent" by default */
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Remove the background color of all tablinks/buttons
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+
+  // Show the specific tab content
+  document.getElementById(pageName).style.display = "block";
+
+  // Add the specific color to the button used to open the tab content
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $.noConflict();
+            var table = $('#parti_genes_table').DataTable();
+
+        });
+</script>
+{% endblock %}
+{% block script %}style="position: inherit;"{% endblock %}

@@ -16,7 +16,89 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
     protein:  name 'TBP1', keyword 'qtl'.<br>
     QTL: name 'BNL6.32' or keyword 'trait'.<br>
 </div>
+<style>
+/* Popup container - can be anything you want */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+/*popup css*/
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: white;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+</style>
 <!--<center>
     <div class="container">
         <form id="sform">
@@ -33,6 +115,8 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
     </div>
 </center>-->
 <!-- TEST -->
+
+
 <div class="Q-Search A-Search">
     <div class="container delim">
         <div class="row">
@@ -52,7 +136,7 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
 
                     </style>
                     <span class="input-group-btn">
-                         <button class="btn btn-primary" id="jcb" value="Search" type="submit">Search</button>
+                         <button class="btn btn-primary" id="jcb" value="Search" type="submit" onclick='myfunction();'>Search</button>
                     </span>
                 </div>
             </div>
@@ -60,38 +144,161 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
     </div>
 </div>
 
-    </form>
-    <table id="depart_manager" class="table table-hover table-dark" style ="background-color: white">
 
-    </style>
+    <div style="background-color: white">
 
-                    <tr>
-                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(1)')" style="cursor:pointer">
-                            ID
-                        </th>
-                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(2)')" style="cursor:pointer">
-                            URI</th>
-                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(3)')" style="cursor:pointer">
-                            graph</th>
-                        <th onclick="w3.sortHTML('#depart_manager', '.gene', 'td:nth-child(4)')" style="cursor:pointer">
-                            keyword_reference</th>
 
-                    </tr>
-    {% if keyword %}
-        {% for gene in genes %}
-        <tr class="gene">
-        <td>{{ gene["Id"] }} <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a></td>
-        <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
-        <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
-        <td>{{ gene["keyword_reference"] }}</td>
-        <td><a href="http://agrold.southgreen.fr/agrold/agrold_explorer.jsp?iri={{ gene['URI'] }}" target="_blank" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Visualize </a></td>
-        <td><a href="http://127.0.0.1:5000/test/sparql?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Sparql </a></td>
-        </tr>
-        {% endfor %}
-    {% else %}
-    Please submit a keyword
-    {% endif %}
+    <table id="depart_manager" class="table table-hover table-dark" style ="background-color: white" style="visibility: hidden">
+        <thead>
+            <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>URI</th>
+                        <th></th>
+                        <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% if type == 'ontologies' %}
+                {% if keyword %}
+                    {% for gene in genes %}
+                        <tr class="gene">
+                            <td>{{ gene["Id"] }} <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
+                                <a href="http://127.0.0.1:5000/test/infor_uri_ontology?entity_uri={{ gene['Id'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+                            </td>
+                            <td>{{ gene["Name"] }}</td>
+                            <td>{{ gene["Description"] }}</td>
+                            <td>{{ gene["URI"] }}</td>
+                            <td><a href="http://agrold.southgreen.fr/agrold/agrold_explorer.jsp?iri={{ gene['URI'] }}" target="_blank" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Visualize </a></td>
+                            <td><a href="http://127.0.0.1:5000/test/sparql?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Sparql </a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+            {% elif type == 'genes'%}
+                {% if keyword %}
+                    {% for gene in genes %}
+                        <tr class="gene">
+                            <td>{{ gene["Id"] }}
+                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
+                                <a href="http://127.0.0.1:5000/test/infor_uri_gene?entity_uri={{ gene['URI'] }}&entity_id={{ gene['Id'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+                                </td>
+                            <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
+                            <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
+                            <td>{{ gene["keyword_reference"] }}</td>
+                            <td><a href="http://agrold.southgreen.fr/agrold/agrold_explorer.jsp?iri={{ gene['URI'] }}" target="_blank" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Visualize </a></td>
+                            <td><a href="http://127.0.0.1:5000/test/sparql?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Sparql </a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+            {% elif type == 'proteins'%}
+                {% if keyword %}
+                    {% for gene in genes %}
+                        <tr class="gene">
+                            <td>{{ gene["Id"] }}
+                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
+                                <a href="http://127.0.0.1:5000/test/infor_uri_protein?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+                                </td>
+                            <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
+                            <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
+                            <td>{{ gene["keyword_reference"] }}</td>
+                            <td><a href="http://agrold.southgreen.fr/agrold/agrold_explorer.jsp?iri={{ gene['URI'] }}" target="_blank" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Visualize </a></td>
+                            <td><a href="http://127.0.0.1:5000/test/sparql?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Sparql </a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+            {% elif type == 'qtls'%}
+                {% if keyword %}
+                    {% for gene in genes %}
+                        <tr class="gene">
+                            <td>{{ gene["Id"] }}
+                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
+                                <a href="http://127.0.0.1:5000/test/infor_uri_qtl?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+                                </td>
+                            <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
+                            <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
+                            <td>{{ gene["keyword_reference"] }}</td>
+                            <td><a href="http://agrold.southgreen.fr/agrold/agrold_explorer.jsp?iri={{ gene['URI'] }}" target="_blank" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Visualize </a></td>
+                            <td><a href="http://127.0.0.1:5000/test/sparql?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Sparql </a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+            {% elif type == 'pathways'%}
+                {% if keyword %}
+                    {% for gene in genes %}
+                        <tr class="gene">
+                            <td>{{ gene["Id"] }}
+                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
+                                <a href="http://127.0.0.1:5000/test/infor_uri_pathway?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+                                </td>
+                            <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
+                            <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
+                            <td>{{ gene["keyword_reference"] }}</td>
+                            <td><a href="http://agrold.southgreen.fr/agrold/agrold_explorer.jsp?iri={{ gene['URI'] }}" target="_blank" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Visualize </a></td>
+                            <td><a href="http://127.0.0.1:5000/test/sparql?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Sparql </a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        </tbody>
+        <tfoot>
+            <tr>
+                        <th>ID</th>
+                        <th>URI</th>
+                        <th>graph</th>
+                        <th>keyword_reference</th>
+            </tr>
+        </tfoot>
     </table>
+</div>
+    <script type="text/javascript">
+      function openPage(pageName, elmnt, color) {
+      // Hide all elements with class="tabcontent" by default */
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      // Remove the background color of all tablinks/buttons
+      tablinks = document.getElementsByClassName("tablink");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+      }
+
+      // Show the specific tab content
+      document.getElementById(pageName).style.display = "block";
+
+      // Add the specific color to the button used to open the tab content
+      elmnt.style.backgroundColor = color;
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+    </script>
+    <script>
+    // When the user clicks on div, open the popup
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+    }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.noConflict();
+            var table = $('#depart_manager').DataTable();
+        });
+    </script>
+    <script type="text/javascript">
+        function myfunction(){
+  document.getElementById("displaytable").style.display = "none";
+}
+    </script>
     <script language="javascript">
 
             document.getElementById("jcb").onclick = function () {

@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 
-
+<div style="background-color: white">
 {% if entity_uri %}
 Results found with entity_uri: <b>{{entity_uri}} </b>
-  <table border="1" style="background-color: white; text-align: center; width: 900px">
+  <table id="sparql_table" class="table table-hover table-dark" style ="background-color: white">
   <thead>
   <tr>
   {% for var in results["head"]["vars"] %}
@@ -20,10 +20,17 @@ Results found with entity_uri: <b>{{entity_uri}} </b>
   {% endfor %}
   </tr>
   {% endfor %}
-  <tbody>
+  </tbody>
   </table>
 {% else %}
 Please submit an entity URI
 {% endif %}
+<script type="text/javascript">
+        $(document).ready(function () {
+            $.noConflict();
+            var table = $('#sparql_table').DataTable();
+        });
+</script>
+</div>
 {% endblock %}
 {% block script %}style="position: inherit;"{% endblock %}
