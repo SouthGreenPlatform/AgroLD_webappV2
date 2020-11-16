@@ -33,13 +33,35 @@
 
 <!-- create page tab-->
 
-    <button class="tablink" onclick="openPage('ancestor', this, 'red') " id="defaultOpen" >Ancestor</button>
+    <button class="tablink" onclick="openPage('query_ontology', this, 'red') " id="defaultOpen" >Ontology</button>
+    <button class="tablink" onclick="openPage('ancestor', this, 'red') "  >Ancestor</button>
     <button class="tablink" onclick="openPage('children', this, 'green')" >Children</button>
     <button class="tablink" onclick="openPage('protein', this, 'blue')">Proteins associated</button>
     <button class="tablink" onclick="openPage('qtl', this, 'orange')">QTL associated</button>
 
 
-
+    <div id="query_ontology" class="tabcontent">
+      {% if entity_uri %}
+        <table id="query_ontology_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_query_ontology["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for result in results_query_ontology["results"]["bindings"] %}
+                  <tr>
+                    {% for var in results_query_ontology["head"]["vars"] %}
+                      <td>{{result[var]["value"] if var in result else ""}}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
 
     <div id="ancestor" class="tabcontent">
       {% if entity_uri %}
@@ -166,6 +188,7 @@ document.getElementById("defaultOpen").click();
 <script type="text/javascript">
         $(document).ready(function () {
             $.noConflict();
+            var table = $('#query_ontology_table').DataTable();
             var table = $('#ancestor_table').DataTable();
             var table = $('#children_table').DataTable();
             var table = $('#protein_table').DataTable();

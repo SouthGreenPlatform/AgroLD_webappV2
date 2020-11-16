@@ -149,12 +149,47 @@ def infor_uri_ontology():
     results_child = None
     results_protein = None
     results_qtl = None
+    results_query_ontology = None
     if entity_uri:
         sparql_ances = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_child = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_qtl = SPARQLWrapper("http://sparql.southgreen.fr/")
+        sparql_query_ontology = SPARQLWrapper("http://sparql.southgreen.fr/")
 #http://agrold.southgreen.fr/sparql
+#query-ontology----------------------------------------------------------
+        sparql_query_ontology.setQuery("""
+            BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX geo:<http://www.geneontology.org/formats/oboInOwl#>
+PREFIX obo:<http://purl.obolibrary.org/obo/>
+PREFIX vocab:<vocabulary/>
+PREFIX entity: <%s>
+
+select ?label ?description ?identifier ?synonym ?ns ?trait ?goa ?observation ?expressed_in ?iao
+
+where
+{
+    entity: rdfs:label ?label.
+    OPTIONAL {entity: rdfs:comment ?description.}
+    OPTIONAL {entity: obo:id    ?identifier.}
+    OPTIONAL {entity: obo:hasRelatedSynonym ?synonym.}
+    OPTIONAL {entity: obo:hasOBONamespace   ?ns.}
+    OPTIONAL {entity: vocab:has_trait   ?trait.}
+    OPTIONAL {entity: vocab:has_annotation  ?goa.}
+    OPTIONAL {entity: vocab:observed_in     ?observation.}
+    OPTIONAL {entity: vocab:expressed_in ?expressed_in.}
+    OPTIONAL {entity: obo:IAO_0000115 ?iao.}
+
+
+
+}
+            """% entity_uri)
+        sparql_query_ontology.setReturnFormat(JSON)
+        results_query_ontology = sparql_query_ontology.query().convert()
+
 #ancestor---------------------------------------------
         sparql_ances.setQuery("""
             PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
@@ -271,7 +306,7 @@ OFFSET 0
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_ontology.html', results_ances=results_ances, results_child = results_child, results_protein= results_protein, results_qtl=results_qtl,entity_uri=entity_uri)
+    return render_template('infor_uri_ontology.html', results_query_ontology = results_query_ontology,results_ances=results_ances, results_child = results_child, results_protein= results_protein, results_qtl=results_qtl,entity_uri=entity_uri)
 
 @app.route('/test/infor_uri_gene', methods = ['GET'])
 def infor_uri_gene():
@@ -281,12 +316,58 @@ def infor_uri_gene():
     results_pathway = None
     results_publication = None
     results_term_asso = None
+    results_query_gene = None
+    results_see_also =None
     if entity_uri:
+        sparql_query_gene = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_pathway = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_publication = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_term_asso = SPARQLWrapper("http://sparql.southgreen.fr/")
+        sparql_see_also = SPARQLWrapper("http://sparql.southgreen.fr/")
 #http://agrold.southgreen.fr/sparql
+#see also----------------------------------------------------------------------------------------
+        sparql_see_also.setQuery("""
+            BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+SELECT distinct ?link
+WHERE {
+  <%s> rdfs:seeAlso|<vocabulary/has_dbxref> ?link .
+{<%s> a <http://www.southgreen.fr/agrold/resource/Gene>}
+union
+{<%s> a <http://www.southgreen.fr/agrold/vocabulary/Gene>}
+}
+
+        """ % (entity_uri, entity_uri, entity_uri))
+        sparql_see_also.setReturnFormat(JSON)
+        results_see_also = sparql_see_also.query().convert()
+#query_gene ----------------------------------------
+        sparql_query_gene.setQuery("""
+            BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:<http://purl.org/dc/elements/1.1/>
+PREFIX vocab:<vocabulary/>
+PREFIX entity: <%s>
+#   http://www.southgreen.fr/agrold/vocabulary/develops_from
+
+select ?label ?description ?identifier ?altLabel ?mRNA
+
+where
+{
+    entity: rdfs:label ?label.
+    OPTIONAL {entity: dc:description ?description.}
+    OPTIONAL {entity: dc:identifier ?identifier.}
+    OPTIONAL {entity: skos:altlabel ?altLabel.}
+    OPTIONAL {entity: vocab:develops_from   ?mRNA.}
+
+
+}
+        """ % entity_uri)
+        sparql_query_gene.setReturnFormat(JSON)
+        results_query_gene = sparql_query_gene.query().convert()
 #protein---------------------------------------------
         sparql_protein.setQuery("""
             BASE <http://www.southgreen.fr/agrold/>
@@ -386,14 +467,41 @@ union
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_gene.html', results_protein=results_protein, results_term_asso = results_term_asso, results_pathway= results_pathway, results_publication=results_publication,entity_uri=entity_uri, entity_id = entity_id)
+    return render_template('infor_uri_gene.html', results_see_also = results_see_also, results_query_gene = results_query_gene, results_protein=results_protein, results_term_asso = results_term_asso, results_pathway= results_pathway, results_publication=results_publication,entity_uri=entity_uri, entity_id = entity_id)
 
 @app.route('/test/infor_uri_pathway', methods = ['GET'])
 def infor_uri_pathway():
     entity_uri = request.args.get('entity_uri')
     results_parti_genes = None
+    results_query_pathway =None
     if entity_uri:
         sparql_parti_genes = SPARQLWrapper("http://sparql.southgreen.fr/")
+        sparql_query_pathway = SPARQLWrapper("http://sparql.southgreen.fr/")
+
+        sparql_query_pathway.setQuery("""
+            BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:<http://purl.org/dc/elements/1.1/>
+PREFIX vocab:<vocabulary/>
+PREFIX entity: <%s>
+
+select ?label ?altLabel ?agent ?reaction
+
+where
+{
+    entity: rdfs:label ?label.
+    OPTIONAL {entity: skos:altlabel ?altLabel.}
+    OPTIONAL {entity: vocab:has_agent   ?agent.}
+    OPTIONAL {entity: vocab:has_reaction ?reaction.}
+
+
+}
+        """ % entity_uri)
+        sparql_query_pathway.setReturnFormat(JSON)
+        results_query_pathway = sparql_query_pathway.query().convert()
+
 
         sparql_parti_genes.setQuery("""
                      BASE <http://www.southgreen.fr/agrold/>
@@ -422,7 +530,7 @@ OFFSET 0
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_pathway.html', results_parti_genes=results_parti_genes, entity_uri=entity_uri)
+    return render_template('infor_uri_pathway.html', results_query_pathway = results_query_pathway, results_parti_genes=results_parti_genes, entity_uri=entity_uri)
 
 @app.route('/test/infor_uri_protein', methods = ['GET'])
 def infor_uri_protein():
@@ -430,11 +538,42 @@ def infor_uri_protein():
     results_encoded_by = None
     results_protein_qtl = None
     results_protein_ontology = None
+    results_query_protein = None
     if entity_uri:
         sparql_encoded_by = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein_qtl = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein_ontology = SPARQLWrapper("http://sparql.southgreen.fr/")
+        sparql_query_protein = SPARQLWrapper("http://sparql.southgreen.fr/")
+        #query-protein------------------------------------------------------------------------
+        sparql_query_protein.setQuery("""
+BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:<http://purl.org/dc/elements/1.1/>
+PREFIX vocab:<vocabulary/>
+PREFIX entity: <%s>
 
+select ?label ?description ?description2 ?identifier ?synonym ?altLabel ?function ?goa ?location ?participate
+
+where
+{
+    entity: rdfs:label ?label.
+    OPTIONAL {entity: dc:description ?description.}
+    OPTIONAL {entity: vocab:description ?description2.}
+    OPTIONAL {entity: dc:identifier ?identifier.}
+    OPTIONAL {entity: vocab:has_synonym ?synonym.}
+    OPTIONAL {entity: skos:altlabel ?altLabel.}
+    OPTIONAL {entity: vocab:has_function    ?function.}
+    OPTIONAL {entity: vocab:has_annotation  ?goa.}
+    OPTIONAL {entity: vocab:located_in  ?location.}
+    OPTIONAL {entity: vocab:participates_in ?participate.}
+
+
+}
+        """ % entity_uri)
+        sparql_query_protein.setReturnFormat(JSON)
+        results_query_protein = sparql_query_protein.query().convert()
 
         #ENCODED BY ID------------------------------------------------------------------------
         sparql_encoded_by.setQuery("""
@@ -514,7 +653,7 @@ OFFSET 0
         results_protein_ontology = sparql_protein_ontology.query().convert()
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_protein.html', results_encoded_by=results_encoded_by, results_protein_ontology=results_protein_ontology, results_protein_qtl= results_protein_qtl,  entity_uri=entity_uri)
+    return render_template('infor_uri_protein.html', results_query_protein = results_query_protein, results_encoded_by=results_encoded_by, results_protein_ontology=results_protein_ontology, results_protein_qtl= results_protein_qtl,  entity_uri=entity_uri)
 
 
 @app.route('/test/infor_uri_qtl', methods = ['GET'])
@@ -522,9 +661,45 @@ def infor_uri_qtl():
     entity_uri = request.args.get('entity_uri')
     results_protein = None
     results_ontology = None
+    results_query_qtl = None
     if entity_uri:
         sparql_protein = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_ontology = SPARQLWrapper("http://sparql.southgreen.fr/")
+        sparql_query_qtl = SPARQLWrapper("http://sparql.southgreen.fr/")
+
+
+        sparql_query_qtl.setQuery("""
+        BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX vocab:<vocabulary/>
+PREFIX graph1:<protein.annotations>
+PREFIX graph2:<qtl.annotations>
+PREFIX qtl: <%s> # DTHD
+
+SELECT distinct ?Id ?Name (?protein AS ?URI)
+WHERE {
+ GRAPH graph1: {
+  ?protein vocab:has_trait ?to.
+  ?protein rdfs:label ?Name.
+    BIND(REPLACE(str(?protein), '^.*(#|/)', "") AS ?Id) .
+ }
+ GRAPH graph2: {
+  qtl: vocab:has_trait ?to.
+ }
+}
+ORDER BY ?Name
+LIMIT 30
+OFFSET 0
+        """ % entity_uri)
+        sparql_query_qtl.setReturnFormat(JSON)
+        results_query_qtl = sparql_query_qtl.query().convert()
+
+
+
+
+
+
+
         sparql_protein.setQuery("""
         BASE <http://www.southgreen.fr/agrold/>
 PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
@@ -585,7 +760,7 @@ OFFSET 0
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_qtl.html', results_protein=results_protein, results_ontology= results_ontology, entity_uri=entity_uri)
+    return render_template('infor_uri_qtl.html', results_query_qtl = results_query_qtl, results_protein=results_protein, results_ontology= results_ontology, entity_uri=entity_uri)
 
 
 @app.route('/sparql1', methods = ['GET'])

@@ -33,9 +33,32 @@
 
 <!-- create page tab-->
 
-<button class="tablink" onclick="openPage('parti_genes', this, 'red') " id="defaultOpen" >Participating Genes</button>
+<button class="tablink" onclick="openPage('query_pathway', this, 'red') " id="defaultOpen" >Pathway</button>
+<button class="tablink" onclick="openPage('parti_genes', this, 'red') "  >Participating Genes</button>
 
-
+<div id="query_pathway"  class="tabcontent">
+      {% if entity_uri %}
+        <table id="query_pathway_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_query_pathway["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                  {% for result in results_query_pathway["results"]["bindings"] %}
+                    <tr>
+                      {% for var in results_query_pathway["head"]["vars"] %}
+                        <td>{{result[var]["value"] if var in result else ""}}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
+ </div>
 
 <div id="parti_genes"  class="tabcontent">
       {% if entity_uri %}
@@ -91,6 +114,8 @@ document.getElementById("defaultOpen").click();
 <script type="text/javascript">
         $(document).ready(function () {
             $.noConflict();
+
+            var table = $('#query_pathway_table').DataTable();
             var table = $('#parti_genes_table').DataTable();
 
         });

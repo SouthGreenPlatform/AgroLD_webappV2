@@ -32,30 +32,30 @@
 
 
 <!-- create page tab-->
-
+    <button class="tablink" onclick="openPage('query_gene', this, 'red') " id="defaultOpen">Gene</button>
     <button class="tablink" onclick="openPage('protein', this, 'red') " id="defaultOpen" >Protein</button>
     <button class="tablink" onclick="openPage('pathway', this, 'green')" >Pathway</button>
     <button class="tablink" onclick="openPage('publication', this, 'blue')">Publication</button>
     <button class="tablink" onclick="openPage('term_asso', this, 'orange')">Term associated</button>
     <button class="tablink" onclick="openPage('expression', this, 'yellow')">Expression</button>
+    <button class="tablink" onclick="openPage('see_also', this, 'yellow')">See Also</button>
 
 
 
-
-    <div id="protein" class="tabcontent">
+    <div id="query_gene" class="tabcontent">
       {% if entity_uri %}
-        <table id="protein_table" class="table table-hover table-dark" style ="background-color: white">
+        <table id="query_gene_table" class="table table-hover table-dark" style ="background-color: white">
               <thead>
                 <tr>
-                  {% for var in results_protein["head"]["vars"] %}
+                  {% for var in results_query_gene["head"]["vars"] %}
                     <th>{{var}}</th>
                   {% endfor %}
                 </tr>
               </thead>
               <tbody>
-                {% for result in results_protein["results"]["bindings"] %}
+                {% for result in results_query_gene["results"]["bindings"] %}
                   <tr>
-                    {% for var in results_protein["head"]["vars"] %}
+                    {% for var in results_query_gene["head"]["vars"] %}
                       <td>{{result[var]["value"] if var in result else ""}}</td>
                     {% endfor %}
                   </tr>
@@ -143,6 +143,29 @@
       {% endif %}
     </div>
 
+    <div id="see_also"  class="tabcontent">
+      {% if entity_uri %}
+        <table id="see_also_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_see_also["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for result in results_see_also["results"]["bindings"] %}
+                  <tr>
+                    {% for var in results_see_also["head"]["vars"] %}
+                      <td>{{result[var]["value"] if var in result else ""}}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
+
 
   </div>
 
@@ -176,11 +199,21 @@ document.getElementById("defaultOpen").click();
 <script type="text/javascript">
         $(document).ready(function () {
             $.noConflict();
+            var table = $('#query_gene_table').DataTable();
             var table = $('#protein_table').DataTable();
             var table = $('#pathway_table').DataTable();
             var table = $('#publication_table').DataTable();
             var table = $('#term_asso_table').DataTable();
+            var table = $('#see_also_table').DataTable();
+
         });
+</script>
+<script type="text/javascript">
+  $('query_gene').on('click', function (e) {
+        console.log('####--- MODAL ---####');
+        console.log('# -- Click event DISPLAY');
+        console.log('results_see_also')
+    });
 </script>
 {% endblock %}
 {% block script %}style="position: inherit;"{% endblock %}

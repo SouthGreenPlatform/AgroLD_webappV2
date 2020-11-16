@@ -32,13 +32,35 @@
 
 
 <!-- create page tab-->
-
-<button class="tablink" onclick="openPage('encoded_by', this, 'red') " id="defaultOpen" >IsEncodedBy </button>
+results_query_protein
+<button class="tablink" onclick="openPage('query_protein', this, 'red') " id="defaultOpen" >Protein</button>
+<button class="tablink" onclick="openPage('encoded_by', this, 'red') "  >IsEncodedBy </button>
 <button class="tablink" onclick="openPage('qtl', this, 'green') " >QTL</button>
 <button class="tablink" onclick="openPage('ontology', this, 'blue')  ">Ontology</button>
 <button class="tablink" onclick="openPage('graph', this, 'brown') " >View as Graph</button>
 
-
+<div id="query_protein"  class="tabcontent">
+      {% if entity_uri %}
+        <table id="query_protein_table" class="table table-hover table-dark" style ="background-color: white">
+              <thead>
+                <tr>
+                  {% for var in results_query_protein["head"]["vars"] %}
+                    <th>{{var}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                  {% for result in results_query_protein["results"]["bindings"] %}
+                    <tr>
+                      {% for var in results_query_protein["head"]["vars"] %}
+                        <td>{{result[var]["value"] if var in result else ""}}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+              </tbody>
+        </table>
+        {% endif %}
+    </div>
 
 <div id="encoded_by"  class="tabcontent">
       {% if entity_uri %}
@@ -146,6 +168,7 @@ document.getElementById("defaultOpen").click();
 <script type="text/javascript">
         $(document).ready(function () {
             $.noConflict();
+            var table = $('#query_protein_table').DataTable();
             var table = $('#encoded_by_table').DataTable();
             var table = $('#qtl_table').DataTable();
             var table = $('#ontology_table').DataTable();
