@@ -165,8 +165,8 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
                 {% if keyword %}
                     {% for gene in genes %}
                         <tr class="gene">
-                            <td>{{ gene["Id"] }} <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
-                                <a href="http://127.0.0.1:5000/test/infor_uri_ontology?entity_uri={{ gene['Id'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+                            <td>{{ gene["Id"] }}
+                                <a href="http://127.0.0.1:5000/test/infor_uri_ontology?entity_uri={{ gene['Id'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Display all</a>
                             </td>
                             <td>{{ gene["Name"] }}</td>
                             <td>{{ gene["Description"] }}</td>
@@ -182,8 +182,8 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
                     {% for gene in genes %}
                         <tr class="gene">
                             <td>{{ gene["Id"] }}
-                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
-                                <a href="http://127.0.0.1:5000/test/infor_uri_gene?entity_uri={{ gene['URI'] }}&entity_id={{ gene['Id'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+
+                                <a href="http://127.0.0.1:5000/test/infor_uri_gene?entity_uri={{ gene['URI'] }}&entity_id={{ gene['Id'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Display all</a>
                                 </td>
                             <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
                             <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
@@ -199,8 +199,8 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
                     {% for gene in genes %}
                         <tr class="gene">
                             <td>{{ gene["Id"] }}
-                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
-                                <a href="http://127.0.0.1:5000/test/infor_uri_protein?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+
+                                <a href="http://127.0.0.1:5000/test/infor_uri_protein?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Display all</a>
                                 </td>
                             <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
                             <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
@@ -216,8 +216,8 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
                     {% for gene in genes %}
                         <tr class="gene">
                             <td>{{ gene["Id"] }}
-                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
-                                <a href="http://127.0.0.1:5000/test/infor_uri_qtl?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+
+                                <a href="http://127.0.0.1:5000/test/infor_uri_qtl?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Display all</a>
                                 </td>
                             <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
                             <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
@@ -233,8 +233,8 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
                     {% for gene in genes %}
                         <tr class="gene">
                             <td>{{ gene["Id"] }}
-                                <a href="http://127.0.0.1:5000/test/display?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold"> Display </a>
-                                <a href="http://127.0.0.1:5000/test/infor_uri_pathway?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Show</a>
+
+                                <a href="http://127.0.0.1:5000/test/infor_uri_pathway?entity_uri={{ gene['URI'] }}" target="entity_uri" style="text-decoration: none; color:#00B5AD; font-weight:bold">Display all</a>
                                 </td>
                             <td><a class="uri" target="_blank" href="{{ gene['URI'] }}">{{ gene["URI"] }}</a></td>
                             <td><a class="uri" target="_blank" href="{{ gene['graph'] }}">{{ gene["graph"] }}</a></td>
@@ -256,38 +256,8 @@ ontological concepts: 'plant height' or 'regulation of gene expression'.<br>
         </tfoot>
     </table>
 </div>
-    <script type="text/javascript">
-      function openPage(pageName, elmnt, color) {
-      // Hide all elements with class="tabcontent" by default */
-      var i, tabcontent, tablinks;
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
 
-      // Remove the background color of all tablinks/buttons
-      tablinks = document.getElementsByClassName("tablink");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].style.backgroundColor = "";
-      }
 
-      // Show the specific tab content
-      document.getElementById(pageName).style.display = "block";
-
-      // Add the specific color to the button used to open the tab content
-      elmnt.style.backgroundColor = color;
-    }
-
-    // Get the element with id="defaultOpen" and click on it
-    document.getElementById("defaultOpen").click();
-    </script>
-    <script>
-    // When the user clicks on div, open the popup
-    function myFunction() {
-      var popup = document.getElementById("myPopup");
-      popup.classList.toggle("show");
-    }
-    </script>
     <script type="text/javascript">
         $(document).ready(function () {
             $.noConflict();

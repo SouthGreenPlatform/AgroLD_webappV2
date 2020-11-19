@@ -150,7 +150,27 @@ def infor_uri_ontology():
     results_protein = None
     results_qtl = None
     results_query_ontology = None
+    results = None
     if entity_uri:
+        sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
+
+        sparql.setQuery("""
+                     BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX uniprot:<http://purl.uniprot.org/uniprot/>
+SELECT ?property ?hasValue ?isValueOf
+WHERE {
+values (?q){(<%s>)}
+  { ?q ?property ?hasValue }
+  UNION
+  { ?isValueOf ?property ?q }
+}
+        """ % entity_uri)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+
+
         sparql_ances = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_child = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein = SPARQLWrapper("http://sparql.southgreen.fr/")
@@ -306,7 +326,7 @@ OFFSET 0
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_ontology.html', results_query_ontology = results_query_ontology,results_ances=results_ances, results_child = results_child, results_protein= results_protein, results_qtl=results_qtl,entity_uri=entity_uri)
+    return render_template('infor_uri_ontology.html',results = results, results_query_ontology = results_query_ontology,results_ances=results_ances, results_child = results_child, results_protein= results_protein, results_qtl=results_qtl,entity_uri=entity_uri)
 
 @app.route('/test/infor_uri_gene', methods = ['GET'])
 def infor_uri_gene():
@@ -318,7 +338,26 @@ def infor_uri_gene():
     results_term_asso = None
     results_query_gene = None
     results_see_also =None
+    results = None
     if entity_uri:
+        sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
+
+        sparql.setQuery("""
+                     BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX uniprot:<http://purl.uniprot.org/uniprot/>
+SELECT ?property ?hasValue ?isValueOf
+WHERE {
+values (?q){(<%s>)}
+  { ?q ?property ?hasValue }
+  UNION
+  { ?isValueOf ?property ?q }
+}
+        """ % entity_uri)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+
         sparql_query_gene = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_pathway = SPARQLWrapper("http://sparql.southgreen.fr/")
@@ -467,14 +506,33 @@ union
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_gene.html', results_see_also = results_see_also, results_query_gene = results_query_gene, results_protein=results_protein, results_term_asso = results_term_asso, results_pathway= results_pathway, results_publication=results_publication,entity_uri=entity_uri, entity_id = entity_id)
+    return render_template('infor_uri_gene.html', results = results, results_see_also = results_see_also, results_query_gene = results_query_gene, results_protein=results_protein, results_term_asso = results_term_asso, results_pathway= results_pathway, results_publication=results_publication,entity_uri=entity_uri, entity_id = entity_id)
 
 @app.route('/test/infor_uri_pathway', methods = ['GET'])
 def infor_uri_pathway():
     entity_uri = request.args.get('entity_uri')
     results_parti_genes = None
     results_query_pathway =None
+    results = None
     if entity_uri:
+        sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
+
+        sparql.setQuery("""
+                     BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX uniprot:<http://purl.uniprot.org/uniprot/>
+SELECT ?property ?hasValue ?isValueOf
+WHERE {
+values (?q){(<%s>)}
+  { ?q ?property ?hasValue }
+  UNION
+  { ?isValueOf ?property ?q }
+}
+        """ % entity_uri)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+
         sparql_parti_genes = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_query_pathway = SPARQLWrapper("http://sparql.southgreen.fr/")
 
@@ -530,7 +588,7 @@ OFFSET 0
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_pathway.html', results_query_pathway = results_query_pathway, results_parti_genes=results_parti_genes, entity_uri=entity_uri)
+    return render_template('infor_uri_pathway.html',results=results, results_query_pathway = results_query_pathway, results_parti_genes=results_parti_genes, entity_uri=entity_uri)
 
 @app.route('/test/infor_uri_protein', methods = ['GET'])
 def infor_uri_protein():
@@ -539,7 +597,27 @@ def infor_uri_protein():
     results_protein_qtl = None
     results_protein_ontology = None
     results_query_protein = None
+    results = None
     if entity_uri:
+        sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
+
+        sparql.setQuery("""
+                     BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX uniprot:<http://purl.uniprot.org/uniprot/>
+SELECT ?property ?hasValue ?isValueOf
+WHERE {
+values (?q){(<%s>)}
+  { ?q ?property ?hasValue }
+  UNION
+  { ?isValueOf ?property ?q }
+}
+        """ % entity_uri)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+
+
         sparql_encoded_by = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein_qtl = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_protein_ontology = SPARQLWrapper("http://sparql.southgreen.fr/")
@@ -653,7 +731,7 @@ OFFSET 0
         results_protein_ontology = sparql_protein_ontology.query().convert()
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_protein.html', results_query_protein = results_query_protein, results_encoded_by=results_encoded_by, results_protein_ontology=results_protein_ontology, results_protein_qtl= results_protein_qtl,  entity_uri=entity_uri)
+    return render_template('infor_uri_protein.html',results=results, results_query_protein = results_query_protein, results_encoded_by=results_encoded_by, results_protein_ontology=results_protein_ontology, results_protein_qtl= results_protein_qtl,  entity_uri=entity_uri)
 
 
 @app.route('/test/infor_uri_qtl', methods = ['GET'])
@@ -662,7 +740,27 @@ def infor_uri_qtl():
     results_protein = None
     results_ontology = None
     results_query_qtl = None
+    results = None
     if entity_uri:
+        sparql = SPARQLWrapper("http://agrold.southgreen.fr/sparql")
+
+        sparql.setQuery("""
+                     BASE <http://www.southgreen.fr/agrold/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX uniprot:<http://purl.uniprot.org/uniprot/>
+SELECT ?property ?hasValue ?isValueOf
+WHERE {
+values (?q){(<%s>)}
+  { ?q ?property ?hasValue }
+  UNION
+  { ?isValueOf ?property ?q }
+}
+        """ % entity_uri)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+
+
         sparql_protein = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_ontology = SPARQLWrapper("http://sparql.southgreen.fr/")
         sparql_query_qtl = SPARQLWrapper("http://sparql.southgreen.fr/")
@@ -760,7 +858,7 @@ OFFSET 0
 
         # for result in results["results"]["bindings"]:
             # print(result["property"], result["hasValue"])
-    return render_template('infor_uri_qtl.html', results_query_qtl = results_query_qtl, results_protein=results_protein, results_ontology= results_ontology, entity_uri=entity_uri)
+    return render_template('infor_uri_qtl.html',results=results, results_query_qtl = results_query_qtl, results_protein=results_protein, results_ontology= results_ontology, entity_uri=entity_uri)
 
 
 @app.route('/sparql1', methods = ['GET'])

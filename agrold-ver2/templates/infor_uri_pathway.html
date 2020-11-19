@@ -35,6 +35,7 @@
 
 <button class="tablink" onclick="openPage('query_pathway', this, 'red') " id="defaultOpen" >Pathway</button>
 <button class="tablink" onclick="openPage('parti_genes', this, 'red') "  >Participating Genes</button>
+<button class="tablink" onclick="openPage('display_all', this, 'yellow')">Display all</button>
 
 <div id="query_pathway"  class="tabcontent">
       {% if entity_uri %}
@@ -82,6 +83,29 @@
         </table>
         {% endif %}
     </div>
+    <div id="display_all"  class="tabcontent">
+      {% if entity_uri %}
+      Results found with entity_uri: <b>{{entity_uri}} </b>
+        <table id="sparql_table" class="table table-hover table-dark" style ="background-color: white">
+        <thead>
+        <tr>
+        {% for var in results["head"]["vars"] %}
+        <th>{{var}}</th>
+        {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in results["results"]["bindings"] %}
+        <tr>
+          {% for var in results["head"]["vars"] %}
+        <td>{{result[var]["value"] if var in result else ""}}</td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+</div>
  </div>
 
 
@@ -117,6 +141,7 @@ document.getElementById("defaultOpen").click();
 
             var table = $('#query_pathway_table').DataTable();
             var table = $('#parti_genes_table').DataTable();
+            var table = $('#sparql_table').DataTable();
 
         });
 </script>

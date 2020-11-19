@@ -37,6 +37,7 @@
 <button class="tablink" onclick="openPage('protein', this, 'red') "  >Protein Association</button>
 <button class="tablink" onclick="openPage('ontology', this, 'red') "  >Ontology Association</button>
 <button class="tablink" onclick="openPage('graph', this, 'red') "  >View as Graph</button>
+<button class="tablink" onclick="openPage('display_all', this, 'yellow')">Display all</button>
 
 
 <div id="query_qtl"  class="tabcontent">
@@ -114,6 +115,30 @@
 <div id="graph" class ="tablecontent">
 
 </div>
+
+<div id="display_all"  class="tabcontent">
+      {% if entity_uri %}
+      Results found with entity_uri: <b>{{entity_uri}} </b>
+        <table id="sparql_table" class="table table-hover table-dark" style ="background-color: white">
+        <thead>
+        <tr>
+        {% for var in results["head"]["vars"] %}
+        <th>{{var}}</th>
+        {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in results["results"]["bindings"] %}
+        <tr>
+          {% for var in results["head"]["vars"] %}
+        <td>{{result[var]["value"] if var in result else ""}}</td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+</div>
  </div>
 
 
@@ -150,6 +175,7 @@ document.getElementById("defaultOpen").click();
             var table = $('#query_qtl_table').DataTable();
             var table = $('#protein_table').DataTable();
             var table = $('#ontology_table').DataTable();
+            var table = $('#sparql_table').DataTable();
         });
 </script>
 {% endblock %}
